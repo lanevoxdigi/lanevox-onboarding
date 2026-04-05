@@ -563,7 +563,7 @@ const totalSteps = 5;
 // ── Navigation ───────────────────────────────────────────────────────────────
 function goNext(from) {
   if (!validateStep(from)) return;
-  if (from === 4) populateAgreement();
+  if (from === 4) { populateAgreement(); setTimeout(() => window.resizeSignatureCanvas && window.resizeSignatureCanvas(), 50); }
   transitionTo(from + 1, 'forward');
 }
 function goBack(from) {
@@ -716,6 +716,7 @@ function populateAgreement() {
   }
   resize();
   window.addEventListener('resize', resize);
+  window.resizeSignatureCanvas = resize;
 
   function getPos(e) {
     const rect = canvas.getBoundingClientRect();
