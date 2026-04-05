@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Service Agreement — Lanevox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0A1628;--ink:#0A0A0A;--muted:#5A5A58;--faint:#9A9A97;--border:rgba(10,10,10,0.12);}
+body{background:#fff;font-family:'DM Sans',sans-serif;font-weight:300;color:var(--ink);font-size:14px;line-height:1.7;}
+
+.page{max-width:800px;margin:0 auto;padding:56px 64px 100px;}
+
+/* ── HEADER ── */
+.doc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:48px;padding-bottom:32px;border-bottom:2px solid var(--navy);}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy);letter-spacing:0.15em;}
+.doc-meta{text-align:right;font-size:13px;color:var(--muted);}
+.doc-meta strong{display:block;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--navy);margin-bottom:4px;}
+
+/* ── EDITABLE FIELDS ── */
+.party-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:40px;padding:24px;background:#F9F9F8;border:1px solid var(--border);border-radius:10px;}
+.edit-field{display:flex;flex-direction:column;gap:6px;}
+.edit-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint);}
+[contenteditable]{
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;
+  color:var(--ink);outline:none;border-bottom:1px dashed var(--border);
+  padding:4px 0;min-width:80px;transition:border-color 0.2s;
+}
+[contenteditable]:focus{border-bottom-color:var(--navy);}
+[contenteditable]:empty::before{content:attr(data-placeholder);color:var(--faint);}
+
+/* ── SERVICES ── */
+.services-section{margin-bottom:36px;}
+.services-title{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;}
+.service-list{display:flex;flex-direction:column;gap:8px;}
+.service-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;border:1px solid var(--border);border-radius:8px;
+  cursor:pointer;transition:background 0.15s,border-color 0.15s;
+}
+.service-item:hover{background:#F9F9F8;}
+.service-item.ticked{border-color:var(--navy);background:#F9F9F8;}
+.service-item input[type="checkbox"]{
+  width:16px;height:16px;cursor:pointer;accent-color:var(--navy);
+  flex-shrink:0;margin-top:2px;
+}
+.service-info{display:flex;flex-direction:column;gap:2px;}
+.service-tier{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);}
+.service-name{font-size:14px;font-weight:400;color:var(--ink);}
+.service-price{font-size:12px;color:var(--muted);}
+
+/* ── AGREEMENT BODY ── */
+.doc-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--navy);margin-bottom:28px;}
+.clause{margin-bottom:28px;}
+.clause h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--navy);margin-bottom:8px;}
+.clause p{margin-bottom:10px;font-size:14px;line-height:1.75;}
+.clause ul{padding-left:22px;margin-bottom:10px;}
+.clause li{margin-bottom:6px;font-size:14px;}
+
+/* ── SIGNATURE BLOCKS ── */
+.sig-section{margin-top:56px;padding-top:32px;border-top:1px solid var(--border);}
+.sig-section-title{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);margin-bottom:24px;}
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+.sig-block{}
+.sig-party{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--faint);margin-bottom:20px;}
+.sig-line{
+  border-bottom:1px solid var(--ink);padding-bottom:4px;
+  margin-bottom:8px;min-height:40px;display:flex;align-items:flex-end;
+}
+.sig-line-label{font-size:11px;color:var(--faint);margin-top:4px;}
+.sig-pre{font-size:14px;color:var(--muted);font-style:italic;}
+
+/* ── PRINT BUTTON ── */
+.print-btn{
+  position:fixed;bottom:28px;right:28px;
+  padding:12px 22px;background:var(--navy);color:#F4F3EF;
+  border:none;border-radius:24px;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:500;cursor:pointer;
+  box-shadow:0 4px 20px rgba(10,22,40,0.2);
+  transition:opacity 0.2s;z-index:100;
+}
+.print-btn:hover{opacity:0.88;}
+
+/* ── PRINT STYLES ── */
+@media print{
+  body{font-size:12px;}
+  .page{padding:0;}
+  .print-btn{display:none!important;}
+  [contenteditable]{border-bottom:none;}
+  .service-item{break-inside:avoid;}
+  .sig-section{page-break-inside:avoid;}
+  @page{margin:20mm 18mm;}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- Header -->
+  <div class="doc-header">
+    <div class="logo">
+      <svg width="26" height="26" viewBox="0 0 100 100" fill="#0A1628">
+        <polygon points="50.00,4.00 57.52,29.33 79.57,14.76 69.05,39.00 95.30,42.01 71.67,53.82 89.84,73.00 64.14,66.85 65.73,93.23 50.00,72.00 34.27,93.23 35.86,66.85 10.16,73.00 28.33,53.82 4.70,42.01 30.95,39.00 20.43,14.76 42.48,29.33"/>
+      </svg>
+      <span class="logo-text">LNVX</span>
+    </div>
+    <div class="doc-meta">
+      <strong>Client Service Agreement</strong>
+      Lanevox Consulting Group
+    </div>
+  </div>
+
+  <!-- Editable party info -->
+  <div class="party-row">
+    <div class="edit-field">
+      <span class="edit-label">Client Name</span>
+      <div contenteditable="true" data-placeholder="Full name"></div>
+    </div>
+    <div class="edit-field">
+      <span class="edit-label">Business Name</span>
+      <div contenteditable="true" data-placeholder="Business name"></div>
+    </div>
+    <div class="edit-field">
+      <span class="edit-label">Date</span>
+      <div contenteditable="true" id="date-field"></div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div class="services-section">
+    <div class="services-title">Services Engaged</div>
+    <div class="service-list">
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">Digital · Essential</span>
+          <span class="service-name">Lanevox Digital Essential</span>
+          <span class="service-price">$799 upfront + $249/month</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">Digital · Growth</span>
+          <span class="service-name">Lanevox Digital Growth</span>
+          <span class="service-price">$1,200 upfront + $399/month</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">Content · Essential</span>
+          <span class="service-name">Lanevox Content Essential</span>
+          <span class="service-price">$499/month</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">Content · Growth</span>
+          <span class="service-name">Lanevox Content Growth</span>
+          <span class="service-price">$899/month</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">Ads · Essential</span>
+          <span class="service-name">Lanevox Ads Essential</span>
+          <span class="service-price">$599/month management</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">Ads · Growth</span>
+          <span class="service-name">Lanevox Ads Growth</span>
+          <span class="service-price">$999/month management</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">All-In · Essential</span>
+          <span class="service-name">All-In Essential</span>
+          <span class="service-price">$999 upfront + $1,799/month</span>
+        </div>
+      </label>
+      <label class="service-item" onclick="toggleService(this)">
+        <input type="checkbox" onclick="event.stopPropagation();this.closest('.service-item').classList.toggle('ticked',this.checked)">
+        <div class="service-info">
+          <span class="service-tier">All-In · Growth</span>
+          <span class="service-name">All-In Growth</span>
+          <span class="service-price">$1,499 upfront + $2,499/month</span>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Agreement title -->
+  <h1 class="doc-title">Lanevox Client Service Agreement</h1>
+
+  <!-- Clauses -->
+  <div class="clause">
+    <h3>1. Services</h3>
+    <p>Lanevox Consulting Group ABN 123 456 789 ("the Agency") agrees to provide the services selected above to the Client. The specific scope, deliverables and timelines for each service will be outlined in a separate onboarding brief following this agreement.</p>
+  </div>
+
+  <div class="clause">
+    <h3>2. Payment Terms</h3>
+    <p>Payment is processed securely via Stripe. A payment link will be provided to the Client separately upon signing this agreement.</p>
+    <p>Monthly retainer fees are due on the first business day of each calendar month. Upfront setup fees are due prior to commencement of work. All prices are in Australian Dollars (AUD) and are inclusive of GST where applicable.</p>
+    <p>Late payments beyond 7 days may result in a pause of services until outstanding amounts are settled.</p>
+  </div>
+
+  <div class="clause">
+    <h3>3. No Lock-In Contracts</h3>
+    <p>The Client may cancel ongoing monthly services at any time by providing a minimum of 14 days' written notice to hello@lanevox.com.au. Cancellation will take effect at the end of the current billing cycle. Upfront setup fees are non-refundable once work has commenced.</p>
+  </div>
+
+  <div class="clause">
+    <h3>4. Intellectual Property</h3>
+    <p>Upon full payment of all outstanding invoices, ownership of deliverables including website files, ad creative, and written copy transfers to the Client. The Agency retains the right to showcase work in its portfolio unless the Client requests otherwise in writing.</p>
+    <p>Any third-party assets (stock imagery, licensed fonts, plugins) used in the work remain subject to their respective licences.</p>
+  </div>
+
+  <div class="clause">
+    <h3>5. Client Responsibilities</h3>
+    <p>The Client agrees to:</p>
+    <ul>
+      <li>Provide accurate business information, branding assets, and feedback within agreed timeframes.</li>
+      <li>Designate a single point of contact for approvals and communication.</li>
+      <li>Respond to revision requests and approval prompts within 5 business days to avoid delays.</li>
+      <li>Not resell or sublicence the Agency's work to third parties without prior written consent.</li>
+    </ul>
+  </div>
+
+  <div class="clause">
+    <h3>6. Limitation of Liability</h3>
+    <p>The Agency will perform all services with reasonable skill and care. However, the Agency does not guarantee specific outcomes such as search engine rankings, ad performance metrics, or social media growth, as these are influenced by factors outside the Agency's control.</p>
+    <p>The Agency's total liability for any claim shall not exceed the total fees paid by the Client in the three calendar months preceding the claim.</p>
+  </div>
+
+  <div class="clause">
+    <h3>7. Confidentiality</h3>
+    <p>Both parties agree to keep each other's confidential business information private and not to disclose it to third parties without written consent. This obligation continues for two years following termination of the agreement.</p>
+  </div>
+
+  <div class="clause">
+    <h3>8. Governing Law</h3>
+    <p>This agreement is governed by the laws of Queensland, Australia. Any disputes will be subject to the exclusive jurisdiction of the courts of Queensland.</p>
+  </div>
+
+  <!-- Signature blocks -->
+  <div class="sig-section">
+    <div class="sig-section-title">Signatures</div>
+    <div class="sig-grid">
+      <div class="sig-block">
+        <div class="sig-party">The Agency</div>
+        <div class="sig-line"><span class="sig-pre">Adib</span></div>
+        <div class="sig-line-label">Signature</div>
+        <br>
+        <div class="sig-line"><span class="sig-pre">Lanevox Consulting Group</span></div>
+        <div class="sig-line-label">Organisation</div>
+        <br>
+        <div class="sig-line"></div>
+        <div class="sig-line-label">Date</div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-party">The Client</div>
+        <div class="sig-line"></div>
+        <div class="sig-line-label">Signature</div>
+        <br>
+        <div class="sig-line" contenteditable="true" data-placeholder="Client name"></div>
+        <div class="sig-line-label">Full Name</div>
+        <br>
+        <div class="sig-line"></div>
+        <div class="sig-line-label">Date</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+
+<script>
+// Auto-fill today's date
+document.getElementById('date-field').textContent = new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'});
+
+function toggleService(label) {
+  const cb = label.querySelector('input[type="checkbox"]');
+  cb.checked = !cb.checked;
+  label.classList.toggle('ticked', cb.checked);
+}
+</script>
+</body>
+</html>

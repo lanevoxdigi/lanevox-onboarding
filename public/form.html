@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Onboarding — Lanevox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F4F3EF;--surface:#EEECEA;--surface2:#E8E7E3;
+  --navy:#0A1628;--ink:#0A0A0A;--muted:#5A5A58;--faint:#9A9A97;
+  --border:rgba(10,10,10,0.1);--success:#22C55E;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh}
+
+/* ── HEADER ── */
+.site-header{
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:20px 24px;text-align:center;position:sticky;top:0;z-index:100;
+}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy);letter-spacing:0.15em}
+.logo svg{flex-shrink:0}
+.header-sub{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--faint);font-weight:400;margin-top:4px}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:16px 24px;position:sticky;top:73px;z-index:99;
+}
+.progress-bar{
+  max-width:600px;margin:0 auto;
+  display:flex;align-items:center;gap:0;
+}
+.step{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  position:relative;
+}
+.step:not(:last-child)::after{
+  content:'';position:absolute;top:11px;left:calc(50% + 14px);
+  width:calc(100% - 28px);height:2px;background:var(--surface2);
+  transition:background 0.4s;
+}
+.step.done:not(:last-child)::after{background:var(--navy)}
+.step-dot{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--surface2);border:2px solid var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;color:var(--faint);
+  transition:all 0.3s;z-index:1;position:relative;
+}
+.step.active .step-dot{background:var(--navy);border-color:var(--navy);color:#fff}
+.step.done .step-dot{background:var(--navy);border-color:var(--navy);color:#fff}
+.step-label{font-size:10px;font-weight:500;color:var(--faint);letter-spacing:0.05em;text-align:center;transition:color 0.3s}
+.step.active .step-label,.step.done .step-label{color:var(--navy)}
+
+/* ── FORM WRAP ── */
+.form-wrap{
+  max-width:600px;margin:0 auto;padding:40px 24px 80px;
+}
+
+/* ── SECTIONS ── */
+.form-section{
+  display:none;
+}
+.form-section.active{
+  display:block;
+}
+
+.section-title{
+  font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;
+  color:var(--navy);margin-bottom:6px;
+}
+.section-sub{font-size:14px;color:var(--muted);margin-bottom:32px;font-weight:300}
+
+/* ── FORM FIELDS ── */
+.field{margin-bottom:22px}
+.field label{
+  display:block;font-size:12px;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px;
+}
+.field label .req{color:#E85D4A;margin-left:2px}
+.field input,.field textarea,.field select{
+  width:100%;padding:13px 16px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;font-family:'DM Sans',sans-serif;font-size:15px;
+  font-weight:300;color:var(--ink);outline:none;
+  transition:border-color 0.2s,background 0.2s;
+  -webkit-appearance:none;
+}
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--navy);background:#fff;
+}
+.field input.error,.field textarea.error,.field select.error{border-color:#E85D4A}
+.field textarea{resize:vertical;min-height:100px;line-height:1.6}
+.field select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235A5A58' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px}
+
+.field-error{font-size:12px;color:#E85D4A;margin-top:5px;display:none}
+.field.has-error .field-error{display:block}
+
+/* ── RADIO GROUP ── */
+.radio-group{display:flex;flex-direction:column;gap:10px}
+.radio-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;
+  transition:border-color 0.2s,background 0.2s;
+}
+.radio-opt:hover{background:var(--surface2)}
+.radio-opt input{width:18px;height:18px;cursor:pointer;accent-color:var(--navy)}
+.radio-opt span{font-size:15px;font-weight:300;color:var(--ink)}
+.radio-opt.selected{border-color:var(--navy);background:#fff}
+
+/* ── CHECKBOXES ── */
+.check-group{display:flex;flex-direction:column;gap:10px}
+.check-opt{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;
+  transition:border-color 0.2s,background 0.2s;
+}
+.check-opt:hover{background:var(--surface2)}
+.check-opt input{width:18px;height:18px;margin-top:1px;cursor:pointer;accent-color:var(--navy);flex-shrink:0}
+.check-opt.checked{border-color:var(--navy);background:#fff}
+.check-label{display:flex;flex-direction:column;gap:2px}
+.check-label .tier{font-size:10px;font-weight:600;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase}
+.check-label .name{font-size:15px;font-weight:400;color:var(--ink)}
+.check-label .price{font-size:13px;color:var(--muted);font-weight:300}
+
+/* ── NAVIGATION BUTTONS ── */
+.nav-row{display:flex;gap:12px;margin-top:36px}
+.btn-next{
+  flex:1;padding:15px 24px;background:var(--navy);color:#F4F3EF;
+  border:none;border-radius:8px;font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:500;cursor:pointer;
+  transition:opacity 0.2s;letter-spacing:0.02em;
+}
+.btn-next:hover{opacity:0.88}
+.btn-back{
+  padding:15px 20px;background:transparent;color:var(--muted);
+  border:1px solid var(--border);border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:15px;
+  font-weight:400;cursor:pointer;transition:border-color 0.2s,color 0.2s;
+}
+.btn-back:hover{border-color:var(--navy);color:var(--navy)}
+
+/* ── AGREEMENT SECTION ── */
+.agreement-heading{
+  font-family:'Cormorant Garamond',serif;font-size:28px;
+  font-weight:400;color:var(--navy);margin-bottom:6px;
+}
+.agreement-sub{font-size:14px;color:var(--muted);margin-bottom:28px;font-weight:300}
+
+.agreement-box{
+  max-height:320px;overflow-y:scroll;
+  border:1px solid var(--border);border-radius:10px;
+  padding:24px;background:var(--surface);
+  font-size:13px;line-height:1.8;color:var(--muted);
+  margin-bottom:24px;
+}
+.agreement-box h3{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--navy);margin:20px 0 8px}
+.agreement-box h3:first-child{margin-top:0}
+.agreement-box p{margin-bottom:12px}
+.agreement-box ul{padding-left:20px;margin-bottom:12px}
+.agreement-box li{margin-bottom:6px}
+.agreement-meta{
+  background:var(--navy);color:#F4F3EF;border-radius:8px;
+  padding:16px 20px;margin-bottom:20px;font-size:13px;line-height:1.7;
+}
+.agreement-meta strong{font-weight:600}
+
+.agree-check{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;
+  cursor:pointer;margin-bottom:24px;
+  transition:border-color 0.2s;
+}
+.agree-check.checked{border-color:var(--navy);background:#fff}
+.agree-check input{width:18px;height:18px;margin-top:2px;cursor:pointer;accent-color:var(--navy);flex-shrink:0}
+.agree-check span{font-size:14px;font-weight:300;color:var(--ink);line-height:1.5}
+
+/* ── SIGNATURE ── */
+.sig-label{font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.sig-canvas-wrap{
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  background:#fff;margin-bottom:8px;
+}
+#sig-canvas{display:block;width:100%;height:160px;cursor:crosshair;touch-action:none}
+.sig-clear{font-size:13px;color:var(--faint);cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;font-family:'DM Sans',sans-serif}
+.sig-clear:hover{color:var(--muted)}
+.sig-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;margin-bottom:20px}
+.sig-name-date{font-size:13px;color:var(--muted)}
+
+.submit-note{font-size:12px;color:var(--faint);margin-bottom:16px;line-height:1.5}
+
+.btn-submit{
+  width:100%;padding:17px 24px;
+  background:var(--navy);color:#F4F3EF;
+  border:none;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;
+  cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em;
+}
+.btn-submit:hover{opacity:0.88}
+.btn-submit:disabled{opacity:0.5;cursor:not-allowed}
+
+.error-banner{
+  background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;
+  padding:14px 16px;margin-bottom:20px;
+  font-size:14px;color:#B91C1C;display:none;
+}
+
+@media(max-width:480px){
+  .step-label{font-size:9px}
+  .section-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="#">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="#0A1628">
+      <polygon points="50.00,4.00 57.52,29.33 79.57,14.76 69.05,39.00 95.30,42.01 71.67,53.82 89.84,73.00 64.14,66.85 65.73,93.23 50.00,72.00 34.27,93.23 35.86,66.85 10.16,73.00 28.33,53.82 4.70,42.01 30.95,39.00 20.43,14.76 42.48,29.33"/>
+    </svg>
+    <span class="logo-text">LNVX</span>
+  </a>
+  <div class="header-sub">Client Onboarding</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar">
+    <div class="step active" data-step="1">
+      <div class="step-dot">1</div>
+      <span class="step-label">Business</span>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-dot">2</div>
+      <span class="step-label">Brand</span>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-dot">3</div>
+      <span class="step-label">Online</span>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step-dot">4</div>
+      <span class="step-label">Goals</span>
+    </div>
+    <div class="step" data-step="5">
+      <div class="step-dot">5</div>
+      <span class="step-label">Agreement</span>
+    </div>
+  </div>
+</div>
+
+<div class="form-wrap" id="form-wrap">
+
+  <!-- SECTION 1 — Business -->
+  <div class="form-section active" id="section-1">
+    <h2 class="section-title">Your Business</h2>
+    <p class="section-sub">Tell us a bit about who you are and what you do.</p>
+
+    <div class="field" id="f-business_name">
+      <label>Business Name <span class="req">*</span></label>
+      <input type="text" id="business_name" placeholder="e.g. Blue Wave Plumbing">
+      <div class="field-error">Please enter your business name.</div>
+    </div>
+    <div class="field" id="f-industry">
+      <label>Industry / Business Type <span class="req">*</span></label>
+      <input type="text" id="industry" placeholder="e.g. Plumbing, Retail, Real Estate">
+      <div class="field-error">Please enter your industry.</div>
+    </div>
+    <div class="field" id="f-contact_name">
+      <label>Your Full Name <span class="req">*</span></label>
+      <input type="text" id="contact_name" placeholder="First and last name">
+      <div class="field-error">Please enter your full name.</div>
+    </div>
+    <div class="field" id="f-phone">
+      <label>Phone Number <span class="req">*</span></label>
+      <input type="tel" id="phone" placeholder="e.g. 0400 000 000">
+      <div class="field-error">Please enter your phone number.</div>
+    </div>
+    <div class="field" id="f-email">
+      <label>Email Address <span class="req">*</span></label>
+      <input type="email" id="email" placeholder="you@example.com">
+      <div class="field-error">Please enter a valid email address.</div>
+    </div>
+    <div class="field">
+      <label>Business Suburb / Area</label>
+      <input type="text" id="address" placeholder="e.g. Southport, Gold Coast">
+    </div>
+    <div class="field" id="f-description">
+      <label>What does your business do? <span class="req">*</span></label>
+      <textarea id="description" placeholder="Describe your products or services in a few sentences..."></textarea>
+      <div class="field-error">Please describe your business.</div>
+    </div>
+    <div class="field">
+      <label>Who is your target customer?</label>
+      <textarea id="target_customer" placeholder="e.g. Homeowners aged 30–60 in South-East Queensland..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-next" onclick="goNext(1)">Next: Brand & Design →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — Brand -->
+  <div class="form-section" id="section-2">
+    <h2 class="section-title">Brand & Design</h2>
+    <p class="section-sub">Help us understand your visual identity and style.</p>
+
+    <div class="field">
+      <label>Brand Colours (if known)</label>
+      <input type="text" id="brand_colours" placeholder="e.g. Navy blue and gold, or #0A1628">
+    </div>
+    <div class="field">
+      <label>Brand Tone</label>
+      <select id="brand_tone">
+        <option value="">Select a tone...</option>
+        <option value="Professional">Professional</option>
+        <option value="Friendly">Friendly</option>
+        <option value="Luxe">Luxe</option>
+        <option value="Bold">Bold</option>
+        <option value="Casual">Casual</option>
+        <option value="Creative">Creative</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Do you have a logo?</label>
+      <div class="radio-group" id="has_logo_group">
+        <label class="radio-opt" onclick="selectRadio(this,'has_logo','Yes — I\'ll send the file')">
+          <input type="radio" name="has_logo" value="Yes — I'll send the file">
+          <span>Yes — I'll send the file</span>
+        </label>
+        <label class="radio-opt" onclick="selectRadio(this,'has_logo','No — please create one for me')">
+          <input type="radio" name="has_logo" value="No — please create one for me">
+          <span>No — please create one for me</span>
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Businesses or websites you admire the look of</label>
+      <textarea id="admired_brands" placeholder="e.g. Apple.com, a local competitor you like..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBack(2)">← Back</button>
+      <button class="btn-next" onclick="goNext(2)">Next: Online Presence →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — Online -->
+  <div class="form-section" id="section-3">
+    <h2 class="section-title">Online Presence</h2>
+    <p class="section-sub">Tell us where you currently exist online.</p>
+
+    <div class="field">
+      <label>Current Website (if any)</label>
+      <input type="url" id="current_website" placeholder="https://yoursite.com.au">
+    </div>
+    <div class="field">
+      <label>Preferred Domain Name</label>
+      <input type="text" id="domain_preference" placeholder="e.g. yourbusiness.com.au">
+    </div>
+    <div class="field">
+      <label>Facebook Page URL</label>
+      <input type="url" id="facebook" placeholder="https://facebook.com/yourpage">
+    </div>
+    <div class="field">
+      <label>Instagram Handle</label>
+      <input type="text" id="instagram" placeholder="@yourhandle">
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBack(3)">← Back</button>
+      <button class="btn-next" onclick="goNext(3)">Next: Goals & Services →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — Goals -->
+  <div class="form-section" id="section-4">
+    <h2 class="section-title">Goals & Services</h2>
+    <p class="section-sub">What you want to achieve and which services you're signing up for.</p>
+
+    <div class="field" id="f-goals">
+      <label>Top 3 goals for the next 90 days <span class="req">*</span></label>
+      <textarea id="goals" placeholder="1. Get more enquiries from Google&#10;2. Grow Instagram following&#10;3. Launch Facebook ad campaign"></textarea>
+      <div class="field-error">Please share your goals.</div>
+    </div>
+    <div class="field">
+      <label>Main Competitors</label>
+      <textarea id="competitors" placeholder="List any competitors you're aware of..."></textarea>
+    </div>
+
+    <div class="field" id="f-services">
+      <label>Which Lanevox services are you signing up for? <span class="req">*</span></label>
+      <div class="check-group" id="services_group">
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="Lanevox Digital Essential — $799 upfront + $249/mo">
+          <span class="check-label">
+            <span class="tier">Digital · Essential</span>
+            <span class="name">Lanevox Digital Essential</span>
+            <span class="price">$799 upfront + $249/month</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="Lanevox Digital Growth — $1,200 upfront + $399/mo">
+          <span class="check-label">
+            <span class="tier">Digital · Growth</span>
+            <span class="name">Lanevox Digital Growth</span>
+            <span class="price">$1,200 upfront + $399/month</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="Lanevox Content Essential — $499/mo">
+          <span class="check-label">
+            <span class="tier">Content · Essential</span>
+            <span class="name">Lanevox Content Essential</span>
+            <span class="price">$499/month</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="Lanevox Content Growth — $899/mo">
+          <span class="check-label">
+            <span class="tier">Content · Growth</span>
+            <span class="name">Lanevox Content Growth</span>
+            <span class="price">$899/month</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="Lanevox Ads Essential — $599/mo">
+          <span class="check-label">
+            <span class="tier">Ads · Essential</span>
+            <span class="name">Lanevox Ads Essential</span>
+            <span class="price">$599/month management</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="Lanevox Ads Growth — $999/mo">
+          <span class="check-label">
+            <span class="tier">Ads · Growth</span>
+            <span class="name">Lanevox Ads Growth</span>
+            <span class="price">$999/month management</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="All-In Essential — $999 upfront + $1,799/mo">
+          <span class="check-label">
+            <span class="tier">All-In · Essential</span>
+            <span class="name">All-In Essential</span>
+            <span class="price">$999 upfront + $1,799/month</span>
+          </span>
+        </label>
+        <label class="check-opt" onclick="toggleCheck(this)">
+          <input type="checkbox" name="services" value="All-In Growth — $1,499 upfront + $2,499/mo">
+          <span class="check-label">
+            <span class="tier">All-In · Growth</span>
+            <span class="name">All-In Growth</span>
+            <span class="price">$1,499 upfront + $2,499/month</span>
+          </span>
+        </label>
+      </div>
+      <div class="field-error">Please select at least one service.</div>
+    </div>
+
+    <div class="field">
+      <label>Anything else we should know?</label>
+      <textarea id="anything_else" placeholder="Any other details, questions or requests..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goBack(4)">← Back</button>
+      <button class="btn-next" onclick="goNext(4)">Next: Agreement →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — Agreement -->
+  <div class="form-section" id="section-5">
+    <h2 class="agreement-heading">Almost done.</h2>
+    <p class="agreement-sub">Please review and sign the agreement below to complete your onboarding.</p>
+
+    <div class="agreement-box" id="agreement-box">
+      <div class="agreement-meta" id="agreement-meta">
+        <!-- filled by JS -->
+      </div>
+
+      <h3>Lanevox Client Service Agreement</h3>
+
+      <h3>1. Services</h3>
+      <p>Lanevox Consulting Group ABN 123 456 789 ("the Agency") agrees to provide the following services to the Client:</p>
+      <div id="agreement-services-list" style="margin:8px 0 16px;padding:12px 16px;background:rgba(10,22,40,0.05);border-radius:6px;font-size:13px;color:#0A1628;line-height:1.8;">
+        <!-- filled by JS -->
+      </div>
+      <p>The specific scope, deliverables and timelines for each service will be outlined in a separate onboarding brief following this agreement.</p>
+
+      <h3>2. Payment Terms</h3>
+      <p>Payment is processed securely via Stripe. A payment link will be provided to the Client separately upon signing this agreement.</p>
+      <p>Monthly retainer fees are due on the first business day of each calendar month. Upfront setup fees are due prior to commencement of work. All prices are in Australian Dollars (AUD) and are inclusive of GST where applicable.</p>
+      <p>Late payments beyond 7 days may result in a pause of services until outstanding amounts are settled.</p>
+
+      <h3>3. No Lock-In Contracts</h3>
+      <p>The Client may cancel ongoing monthly services at any time by providing a minimum of 14 days' written notice to hello@lanevox.com.au. Cancellation will take effect at the end of the current billing cycle. Upfront setup fees are non-refundable once work has commenced.</p>
+
+      <h3>4. Intellectual Property</h3>
+      <p>Upon full payment of all outstanding invoices, ownership of deliverables including website files, ad creative, and written copy transfers to the Client. The Agency retains the right to showcase work in its portfolio unless the Client requests otherwise in writing.</p>
+      <p>Any third-party assets (stock imagery, licensed fonts, plugins) used in the work remain subject to their respective licences. The Agency will not use unlicensed assets in deliverables.</p>
+
+      <h3>5. Client Responsibilities</h3>
+      <p>The Client agrees to:</p>
+      <ul>
+        <li>Provide accurate business information, branding assets, and feedback within agreed timeframes.</li>
+        <li>Designate a single point of contact for approvals and communication.</li>
+        <li>Respond to revision requests and approval prompts within 5 business days to avoid delays.</li>
+        <li>Not resell or sublicence the Agency's work to third parties without prior written consent.</li>
+      </ul>
+
+      <h3>6. Limitation of Liability</h3>
+      <p>The Agency will perform all services with reasonable skill and care. However, the Agency does not guarantee specific outcomes such as search engine rankings, ad performance metrics, or social media growth, as these are influenced by factors outside the Agency's control.</p>
+      <p>The Agency's total liability for any claim shall not exceed the total fees paid by the Client in the three calendar months preceding the claim.</p>
+
+      <h3>7. Confidentiality</h3>
+      <p>Both parties agree to keep each other's confidential business information private and not to disclose it to third parties without written consent. This obligation continues for two years following termination of the agreement.</p>
+
+      <h3>8. Governing Law</h3>
+      <p>This agreement is governed by the laws of Queensland, Australia. Any disputes will be subject to the exclusive jurisdiction of the courts of Queensland.</p>
+    </div>
+
+    <label class="agree-check" id="agree-check-wrap" onclick="toggleAgree()">
+      <input type="checkbox" id="agreed_to_terms">
+      <span>I have read and understood the Lanevox Client Service Agreement and agree to its terms.</span>
+    </label>
+
+    <div class="error-banner" id="error-banner"></div>
+
+    <div class="sig-label">Sign below using your finger or mouse</div>
+    <div class="sig-canvas-wrap">
+      <canvas id="sig-canvas"></canvas>
+    </div>
+    <div class="sig-footer">
+      <button class="sig-clear" onclick="clearSignature()">Clear Signature</button>
+      <div class="sig-name-date" id="sig-name-date"></div>
+    </div>
+
+    <p class="submit-note">By signing above you confirm your agreement to the terms outlined in this document.</p>
+
+    <div class="nav-row" style="flex-direction:column;gap:12px">
+      <button class="btn-submit" id="btn-submit" onclick="submitForm()">Submit & Sign Agreement →</button>
+      <button class="btn-back" onclick="goBack(5)" style="text-align:center">← Back</button>
+    </div>
+  </div>
+
+</div><!-- /form-wrap -->
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let currentStep = 1;
+const totalSteps = 5;
+
+// ── Navigation ───────────────────────────────────────────────────────────────
+function goNext(from) {
+  if (!validateStep(from)) return;
+  if (from === 4) populateAgreement();
+  transitionTo(from + 1, 'forward');
+}
+function goBack(from) {
+  transitionTo(from - 1, 'back');
+}
+
+function transitionTo(target, direction) {
+  const current = document.getElementById(`section-${currentStep}`);
+  const next = document.getElementById(`section-${target}`);
+
+  const slideIn = direction === 'forward' ? 'translateX(40px)' : 'translateX(-40px)';
+
+  // Show next, set starting position for animation
+  next.style.transition = 'none';
+  next.style.opacity = '0';
+  next.style.transform = slideIn;
+  next.classList.add('active');
+
+  // Force reflow so initial state is painted
+  void next.offsetWidth;
+
+  // Animate next in
+  next.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+  next.style.opacity = '1';
+  next.style.transform = 'translateX(0)';
+
+  // Hide current
+  current.classList.remove('active');
+
+  // Clean up inline styles after animation
+  setTimeout(() => {
+    next.style.transition = '';
+    next.style.opacity = '';
+    next.style.transform = '';
+  }, 320);
+
+  currentStep = target;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Progress ─────────────────────────────────────────────────────────────────
+function updateProgress() {
+  document.querySelectorAll('.step').forEach((el, i) => {
+    const n = i + 1;
+    el.classList.remove('active', 'done');
+    if (n < currentStep) el.classList.add('done');
+    if (n === currentStep) el.classList.add('active');
+  });
+}
+
+// ── Radio & Checkbox helpers ─────────────────────────────────────────────────
+function selectRadio(label, name, value) {
+  document.querySelectorAll(`[name="${name}"]`).forEach(r => r.closest('.radio-opt').classList.remove('selected'));
+  label.classList.add('selected');
+}
+function toggleCheck(label) {
+  const cb = label.querySelector('input[type="checkbox"]');
+  setTimeout(() => {
+    label.classList.toggle('checked', cb.checked);
+  }, 0);
+}
+function toggleAgree() {
+  const cb = document.getElementById('agreed_to_terms');
+  setTimeout(() => {
+    document.getElementById('agree-check-wrap').classList.toggle('checked', cb.checked);
+  }, 0);
+}
+
+// ── Validation ───────────────────────────────────────────────────────────────
+function validateStep(step) {
+  let valid = true;
+
+  const required1 = ['business_name','industry','contact_name','phone','email','description'];
+  const required4 = ['goals'];
+
+  if (step === 1) {
+    required1.forEach(id => {
+      const el = document.getElementById(id);
+      const field = document.getElementById(`f-${id}`);
+      if (!el || !field) return;
+      let ok = el.value.trim().length > 0;
+      if (id === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim());
+      el.classList.toggle('error', !ok);
+      field.classList.toggle('has-error', !ok);
+      if (!ok) valid = false;
+    });
+  }
+  if (step === 4) {
+    required4.forEach(id => {
+      const el = document.getElementById(id);
+      const field = document.getElementById(`f-${id}`);
+      if (!el || !field) return;
+      const ok = el.value.trim().length > 0;
+      el.classList.toggle('error', !ok);
+      field.classList.toggle('has-error', !ok);
+      if (!ok) valid = false;
+    });
+    const checked = document.querySelectorAll('#services_group input:checked');
+    const sf = document.getElementById('f-services');
+    if (checked.length === 0) {
+      sf.classList.add('has-error');
+      valid = false;
+    } else {
+      sf.classList.remove('has-error');
+    }
+  }
+  return valid;
+}
+
+// ── Agreement population ─────────────────────────────────────────────────────
+function populateAgreement() {
+  const name = document.getElementById('contact_name').value;
+  const biz = document.getElementById('business_name').value;
+  const today = new Date().toLocaleDateString('en-AU', {day:'numeric',month:'long',year:'numeric'});
+
+  document.getElementById('agreement-meta').innerHTML = `
+    <strong>Client:</strong> ${name}<br>
+    <strong>Business:</strong> ${biz}<br>
+    <strong>Date:</strong> ${today}
+  `;
+
+  const services = [...document.querySelectorAll('#services_group input:checked')].map(cb => cb.value);
+  document.getElementById('agreement-services-list').innerHTML = services.map(s => `• ${s}`).join('<br>') || 'No services selected.';
+
+  document.getElementById('sig-name-date').textContent = `${name} · ${today}`;
+}
+
+// ── Signature Canvas ─────────────────────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('sig-canvas');
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+  let rafId = null;
+  let pendingX = 0, pendingY = 0;
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = 160 * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = '160px';
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#0A1628';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
+  function drawLine(x1, y1, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+
+  canvas.addEventListener('mousedown', e => {
+    drawing = true;
+    const p = getPos(e);
+    lastX = p.x; lastY = p.y;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 1, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    drawing = true;
+    const p = getPos(e);
+    lastX = p.x; lastY = p.y;
+  }, { passive: false });
+
+  function onMove(e) {
+    if (!drawing) return;
+    if (e.cancelable) e.preventDefault();
+    const p = getPos(e);
+    pendingX = p.x; pendingY = p.y;
+    if (!rafId) {
+      rafId = requestAnimationFrame(() => {
+        drawLine(lastX, lastY, pendingX, pendingY);
+        lastX = pendingX; lastY = pendingY;
+        rafId = null;
+      });
+    }
+  }
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('touchmove', onMove, { passive: false });
+
+  function stopDrawing() { drawing = false; }
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('touchend', stopDrawing);
+  canvas.addEventListener('mouseleave', stopDrawing);
+
+  window.clearSignature = function() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+  window.getSignatureDataURL = function() {
+    return canvas.toDataURL('image/png');
+  };
+  window.isSignatureEmpty = function() {
+    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let i = 3; i < d.length; i += 4) { if (d[i] > 0) return false; }
+    return true;
+  };
+})();
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+async function submitForm() {
+  const banner = document.getElementById('error-banner');
+  banner.style.display = 'none';
+  let errors = [];
+
+  if (!document.getElementById('agreed_to_terms').checked) {
+    errors.push('Please confirm you have read and agreed to the terms.');
+  }
+  if (window.isSignatureEmpty()) {
+    errors.push('Please add your signature to continue.');
+  }
+  if (errors.length) {
+    banner.textContent = errors.join(' ');
+    banner.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const services = [...document.querySelectorAll('#services_group input:checked')].map(cb => cb.value);
+  const payload = {
+    business_name: document.getElementById('business_name').value,
+    industry: document.getElementById('industry').value,
+    contact_name: document.getElementById('contact_name').value,
+    phone: document.getElementById('phone').value,
+    email: document.getElementById('email').value,
+    address: document.getElementById('address').value,
+    description: document.getElementById('description').value,
+    target_customer: document.getElementById('target_customer').value,
+    brand_colours: document.getElementById('brand_colours').value,
+    brand_tone: document.getElementById('brand_tone').value,
+    has_logo: document.querySelector('[name="has_logo"]:checked')?.value || '',
+    admired_brands: document.getElementById('admired_brands').value,
+    current_website: document.getElementById('current_website').value,
+    domain_preference: document.getElementById('domain_preference').value,
+    facebook: document.getElementById('facebook').value,
+    instagram: document.getElementById('instagram').value,
+    goals: document.getElementById('goals').value,
+    competitors: document.getElementById('competitors').value,
+    services: services,
+    anything_else: document.getElementById('anything_else').value,
+    signature_image: window.getSignatureDataURL(),
+    agreed_to_terms: true,
+  };
+
+  try {
+    const res = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      const firstName = payload.contact_name.split(' ')[0];
+      window.location.href = `/success.html?name=${encodeURIComponent(firstName)}`;
+    } else {
+      throw new Error(data.error || 'Submission failed.');
+    }
+  } catch (err) {
+    banner.textContent = err.message || 'Something went wrong. Please try again.';
+    banner.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Submit & Sign Agreement →';
+  }
+}
+</script>
+</body>
+</html>

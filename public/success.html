@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You — Lanevox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F4F3EF;--navy:#0A1628;--ink:#0A0A0A;--muted:#5A5A58;--faint:#9A9A97;--success:#22C55E;}
+body{background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-weight:300;}
+.container{text-align:center;padding:48px 24px;max-width:480px;}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:48px;}
+.logo-text{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--navy);letter-spacing:0.15em;}
+.check-wrap{margin-bottom:32px;animation:pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+h1{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:400;color:var(--navy);margin-bottom:16px;line-height:1.1;}
+.sub{font-size:16px;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:36px;}
+.contact-links{display:flex;flex-direction:column;gap:8px;align-items:center;}
+.contact-links a{
+  color:var(--navy);text-decoration:none;font-size:14px;font-weight:400;
+  padding:10px 20px;border:1px solid rgba(10,10,10,0.12);border-radius:6px;
+  display:inline-block;transition:background 0.2s;
+}
+.contact-links a:hover{background:rgba(10,22,40,0.05);}
+.divider{width:40px;height:1px;background:rgba(10,10,10,0.12);margin:32px auto;}
+</style>
+</head>
+<body>
+<div class="container">
+  <a class="logo" href="https://lanevox.com.au">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="#0A1628">
+      <polygon points="50.00,4.00 57.52,29.33 79.57,14.76 69.05,39.00 95.30,42.01 71.67,53.82 89.84,73.00 64.14,66.85 65.73,93.23 50.00,72.00 34.27,93.23 35.86,66.85 10.16,73.00 28.33,53.82 4.70,42.01 30.95,39.00 20.43,14.76 42.48,29.33"/>
+    </svg>
+    <span class="logo-text">LNVX</span>
+  </a>
+
+  <div class="check-wrap">
+    <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+      <circle cx="36" cy="36" r="36" fill="#DCFCE7"/>
+      <path d="M22 36L31 45L50 27" stroke="#22C55E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <h1 id="thank-you">Thank you.</h1>
+  <p class="sub">We've received your details and will be in touch within 24 hours.</p>
+
+  <div class="contact-links">
+    <a href="mailto:hello@lanevox.com.au">hello@lanevox.com.au</a>
+    <a href="tel:0400583842">0400 583 842</a>
+    <a href="https://lanevox.com.au" target="_blank">lanevox.com.au</a>
+  </div>
+</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name');
+if (name) document.getElementById('thank-you').textContent = `Thank you, ${name}.`;
+</script>
+</body>
+</html>
