@@ -136,7 +136,21 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
   transition:border-color 0.2s,background 0.2s;
 }
 .check-opt:hover{background:var(--surface2)}
-.check-opt input{width:18px;height:18px;margin-top:1px;cursor:pointer;accent-color:var(--navy);flex-shrink:0}
+.check-opt input{display:none}
+.check-box{
+  width:20px;height:20px;border-radius:5px;
+  border:2px solid var(--border);background:#fff;
+  flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;
+  transition:border-color 0.2s,background 0.2s;
+}
+.check-box::after{
+  content:'';width:11px;height:7px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translate(1px,-1px);
+  opacity:0;transition:opacity 0.15s;
+}
+.check-opt.checked .check-box{background:var(--navy);border-color:var(--navy)}
+.check-opt.checked .check-box::after{opacity:1}
 .check-opt.checked{border-color:var(--navy);background:#fff}
 .check-label{display:flex;flex-direction:column;gap:2px}
 .check-label .tier{font-size:10px;font-weight:600;color:var(--faint);letter-spacing:0.1em;text-transform:uppercase}
@@ -193,7 +207,21 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
   transition:border-color 0.2s;
 }
 .agree-check.checked{border-color:var(--navy);background:#fff}
-.agree-check input{width:18px;height:18px;margin-top:2px;cursor:pointer;accent-color:var(--navy);flex-shrink:0}
+.agree-check input{display:none}
+.agree-box{
+  width:20px;height:20px;border-radius:5px;
+  border:2px solid var(--border);background:#fff;
+  flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;
+  transition:border-color 0.2s,background 0.2s;
+}
+.agree-box::after{
+  content:'';width:11px;height:7px;
+  border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translate(1px,-1px);
+  opacity:0;transition:opacity 0.15s;
+}
+.agree-check.checked .agree-box{background:var(--navy);border-color:var(--navy)}
+.agree-check.checked .agree-box::after{opacity:1}
 .agree-check span{font-size:14px;font-weight:300;color:var(--ink);line-height:1.5}
 
 /* ── SIGNATURE ── */
@@ -415,6 +443,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
       <div class="check-group" id="services_group">
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="Lanevox Digital Essential — $799 upfront + $249/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">Digital · Essential</span>
             <span class="name">Lanevox Digital Essential</span>
@@ -423,6 +452,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="Lanevox Digital Growth — $1,200 upfront + $399/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">Digital · Growth</span>
             <span class="name">Lanevox Digital Growth</span>
@@ -431,6 +461,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="Lanevox Content Essential — $499/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">Content · Essential</span>
             <span class="name">Lanevox Content Essential</span>
@@ -439,6 +470,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="Lanevox Content Growth — $899/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">Content · Growth</span>
             <span class="name">Lanevox Content Growth</span>
@@ -447,6 +479,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="Lanevox Ads Essential — $599/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">Ads · Essential</span>
             <span class="name">Lanevox Ads Essential</span>
@@ -455,6 +488,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="Lanevox Ads Growth — $999/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">Ads · Growth</span>
             <span class="name">Lanevox Ads Growth</span>
@@ -463,6 +497,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="All-In Essential — $999 upfront + $1,799/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">All-In · Essential</span>
             <span class="name">All-In Essential</span>
@@ -471,6 +506,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
         </label>
         <label class="check-opt" onclick="toggleCheck(this)">
           <input type="checkbox" name="services" value="All-In Growth — $1,499 upfront + $2,499/mo">
+          <span class="check-box"></span>
           <span class="check-label">
             <span class="tier">All-In · Growth</span>
             <span class="name">All-In Growth</span>
@@ -545,6 +581,7 @@ body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font
 
     <label class="agree-check" id="agree-check-wrap" onclick="toggleAgree()">
       <input type="checkbox" id="agreed_to_terms">
+      <span class="agree-box"></span>
       <span>I have read and understood the Lanevox Client Service Agreement and agree to its terms.</span>
     </label>
 
