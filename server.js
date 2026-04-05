@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const db = require('./database');
 const path = require('path');
 
@@ -13,16 +13,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const PORT = process.env.PORT || 3001;
 const API_KEY = 'LanevoxAdmin2026';
 
-// ── Nodemailer transporter ──────────────────────────────────────────────────
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+// ── Resend email client ─────────────────────────────────────────────────────
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ── Helper: build notification email ────────────────────────────────────────
 function buildEmailHTML(data) {
@@ -163,10 +155,10 @@ app.post('/api/submit', (req, res) => {
     // Send email notification (non-blocking)
     const services = Array.isArray(d.services) ? d.services.join(', ') : (d.services || '');
     const emailData = { ...d, services };
-    transporter.sendMail({
-      from: `"Lanevox Onboarding" <${process.env.SMTP_USER}>`,
+    resend.emails.send({
+      from: 'Lanevox Onboarding <hello@lanevox.com.au>',
       to: process.env.NOTIFY_EMAIL,
-      replyTo: d.email,
+      reply_to: d.email,
       subject: `New Client Submission — ${d.business_name} · ${services}`,
       html: buildEmailHTML(emailData),
     }).catch(err => console.error('Email error:', err));
